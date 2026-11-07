@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06111f">
+<title>J.A.R.V.I.S.</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#06111f;color:#d9f7ff;
+ font-family:Arial,sans-serif;min-height:100vh;
+}
+.app{max-width:520px;margin:auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center}
+h1{font-size:20px;letter-spacing:4px;color:#5cddff;margin:0}
+small{color:#769bb2}
+.status{color:#63f5ba;font-size:12px}
+.core-area{text-align:center;padding:38px 0 25px}
+.core{
+ width:230px;height:230px;margin:auto;
+ border:2px solid #32cfff;border-radius:50%;
+ display:grid;place-items:center;position:relative;
+ box-shadow:0 0 30px #007ac755,inset 0 0 35px #007ac755;
+ animation:pulse 3s ease-in-out infinite;
+}
+.core:before{
+ content:"";position:absolute;inset:14px;
+ border:7px dashed #268dc5;border-radius:50%;
+ animation:spin 18s linear infinite;
+}
+.core:after{
+ content:"";position:absolute;inset:38px;
+ border:2px dotted #80eaff;border-radius:50%;
+ animation:spin 12s linear infinite reverse;
+}
+.center{
+ width:100px;height:100px;border-radius:50%;
+ background:radial-gradient(circle,#efffff,#48d8ff 30%,#005d9a 75%,#06111f);
+ box-shadow:0 0 35px #22cfff;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{
+ 50%{box-shadow:0 0 55px #00bfff99,inset 0 0 40px #007ac777}
+}
+h2{font-size:19px;text-align:center;letter-spacing:2px}
+.subtitle{text-align:center;color:#779bb0;font-size:13px}
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
+button{
+ cursor:pointer;border:1px solid #24668a;border-radius:12px;
+ background:#102a40;color:#bdefff;padding:16px;
+ font-size:13px;
+}
+button:active{background:#17618b}
+.module{min-height:85px}
+.symbol{display:block;font-size:25px;margin-bottom:8px}
+.terminal{
+ margin-top:24px;background:#0b2031;border:1px solid #1c4c68;
+ padding:17px;border-radius:14px;
+}
+.terminal h3{font-size:13px;color:#5cddff}
+#response{font-size:14px;line-height:1.6;min-height:48px}
+input{
+ width:100%;padding:14px;background:#061523;
+ border:1px solid #286080;border-radius:9px;
+ color:white;font-size:15px;outline:none;
+}
+.execute{width:100%;margin-top:10px;background:#075b8b}
+.power{width:100%;margin-top:20px}
+footer{text-align:center;color:#557b94;font-size:10px;margin:25px}
+.off .core{animation:none;filter:grayscale(1);opacity:.35}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header>
+ <div><h1>J.A.R.V.I.S.</h1><small>ASSISTANT SYSTEM 0.1</small></div>
+ <span class="status" id="status">● ONLINE</span>
+</header>
+
+<div class="core-area">
+ <div class="core"><div class="center"></div></div>
+ <h2 id="heading">BEM-VINDO, CHEFE</h2>
+ <p class="subtitle">Sistema de demonstração inicializado</p>
+</div>
+
+<div class="modules">
+ <button class="module" onclick="moduleAction('voice')">
+  <span class="symbol">🎙️</span>COMUNICAÇÃO
+ </button>
+ <button class="module" onclick="moduleAction('image')">
+  <span class="symbol">🖼️</span>IMAGENS
+ </button>
+ <button class="module" onclick="moduleAction('apps')">
+  <span class="symbol">📱</span>APLICATIVOS
+ </button>
+ <button class="module" onclick="moduleAction('security')">
+  <span class="symbol">🛡️</span>SEGURANÇA
+ </button>
+</div>
+
+<div class="terminal">
+ <h3>⌁ TERMINAL DE COMANDOS</h3>
+ <p id="response">Aguardando suas instruções, chefe.</p>
+ <input id="command" placeholder="Digite um comando...">
+ <button class="execute" onclick="execute()">EXECUTAR COMANDO</button>
+</div>
+
+<button class="power" onclick="togglePower()" id="power">
+ DESLIGAR SISTEMA
+</button>
+<footer>J.A.R.V.I.S. DEVELOPMENT BUILD • 0.1</footer>
+</div>
+
+<script>
+let online=true;
+const response=document.getElementById("response");
+const heading=document.getElementById("heading");
+
+function say(text){
+ response.textContent=text;
+}
+
+function moduleAction(type){
+ if(!online)return;
+ const modules={
+  voice:["COMUNICAÇÃO","Módulo de voz em demonstração. O microfone ainda não está conectado."],
+  image:["GERADOR DE IMAGENS","Módulo de imagens preparado. A geração por IA será integrada posteriormente."],
+  apps:["CONTROLE ANDROID","Módulo de aplicativos em demonstração. O controle do celular ainda não está conectado."],
+  security:["SEGURANÇA","Painel de segurança demonstrativo. A autenticação ainda não está implementada."]
+ };
+ heading.textContent=modules[type][0];
+ say(modules[type][1]);
+}
+
+function execute(){
+ if(!online)return;
+ const input=document.getElementById("command");
+ const cmd=input.value.trim().toLowerCase();
+ if(!cmd)return;
+ if(cmd.includes("olá")||cmd.includes("bom dia")){
+  say("Saudações, chefe. J.A.R.V.I.S. à sua disposição.");
+ }else if(cmd.includes("hora")){
+  say("Chefe, agora são "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+".");
+ }else if(cmd.includes("imagem")){
+  moduleAction("image");
+ }else if(cmd.includes("calcul")){
+  say("Calculadora em preparação, chefe.");
+ }else if(cmd.includes("abrir")){
+  say("Comando reconhecido, chefe. A abertura de aplicativos ainda não está integrada.");
+ }else{
+  say("Comando recebido, chefe. Esta versão ainda não possui inteligência artificial conectada.");
+ }
+ input.value="";
+}
+
+document.getElementById("command").addEventListener("keydown",e=>{
+ if(e.key==="Enter")execute();
+});
+
+function togglePower(){
+ online=!online;
+ document.getElementById("app").classList.toggle("off",!online);
+ document.getElementById("status").textContent=online?"● ONLINE":"● OFFLINE";
+ document.getElementById("power").textContent=online?"DESLIGAR SISTEMA":"LIGAR SISTEMA";
+ heading.textContent=online?"BEM-VINDO, CHEFE":"SISTEMA DESLIGADO";
+ say(online?"Sistema reiniciado. Às suas ordens, chefe.":"Sistema desligado.");
+}
+</script>
+</body>
+</html>
